@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, View, SafeAreaView } from "react-native";
 import GlobalStyles from "../../../GlobalStyles";
 import { Ionicons } from "@expo/vector-icons";
+import { LineChart, Grid } from "react-native-svg-charts";
 
 import {
   OuterContainer,
@@ -74,7 +75,16 @@ class LandingPage extends React.Component {
           </DateContainer>
         </OuterContainer>
         <MainContainer>
-          <CryptoComponent></CryptoComponent>
+          <CryptoComponent>
+            <LineChart
+              style={{ height: 200 }}
+              data={data}
+              svg={{ stroke: "rgb(134, 65, 244)" }}
+              contentInset={{ top: 20, bottom: 20 }}
+            >
+              <Grid />
+            </LineChart>
+          </CryptoComponent>
         </MainContainer>
       </SafeAreaView>
     );
