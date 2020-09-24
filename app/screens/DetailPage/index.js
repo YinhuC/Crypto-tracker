@@ -1,18 +1,21 @@
 import React from "react";
-import { StyleSheet, View, SafeAreaView } from "react-native";
+import { StyleSheet, SafeAreaView, Text } from "react-native";
 import GlobalStyles from "../../../GlobalStyles";
 import { Ionicons } from "@expo/vector-icons";
-import { LineChart, Grid } from "react-native-svg-charts";
+import { LineChart } from "react-native-svg-charts";
 import * as shape from "d3-shape";
 
 import {
   OuterContainer,
   HeaderContainer,
   DateContainer,
-  DateText,
   HeaderText,
   CryptoComponent,
   MainContainer,
+  DetailComponent,
+  DetialLeft,
+  DetialRight,
+  Icon,
 } from "./style";
 
 class LandingPage extends React.Component {
@@ -21,6 +24,7 @@ class LandingPage extends React.Component {
     this.state = {
       data: [],
       sylo: [],
+      period: "month",
     };
   }
 
@@ -29,75 +33,103 @@ class LandingPage extends React.Component {
     fetch("https://assets-api.sylo.io/v2/all").then((res) =>
       res.json().then((json) => {
         this.setState({ data: json });
+        this.getData();
       })
     );
   }
 
-  // extractData() {
-  //   var result = this.state.data.map((data) => ({
-  //     icon_address: data.icon_address,
-  //     icon_address_dark: data.icon_address_dark,
-  //     name: data.name,
-  //     id: data.id,
-  //   }));
-
-  //   return result;
-  // }
-
-  getData() {
-    var result = [];
-    //var info = this.extractData();
-    this.state.data.forEach(function (item) {
+  getData = () => {
+    this.state.data.forEach((item) => {
       // Get coin data
       fetch(
         "https://assets-api.sylo.io/v2/asset/id/" +
           item.id +
           "/rate?fiat=NZD&" +
-          "period=week" +
+          "period=" +
+          this.state.period +
           "&type=historic"
       )
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (data) {
-          var prune = data.history.map((data) => data.rate);
-          console.log;
-          result.push(prune);
-        })
+        .then((res) =>
+          res.json().then((json) => {
+            var rate = json.history.map((data) => data.rate);
+            this.setState((prevState) => ({
+              graphData: {
+                [item.name]: rate,
+                ...prevState.graphData,
+              },
+            }));
+          })
+        )
         .catch(function (error) {
           console.log(error);
         });
     });
-    console.log(result);
-    return result;
+  };
+
+  handleDatePress(event) {
+    this.setState({
+      period: event._dispatchInstances.memoizedProps.children,
+    });
+
+    // Get new data for new period
+    // this.getData();
   }
 
   render() {
-    if (this.state.data.length > 0) {
-      this.getData();
+    if (typeof graphData != "undefined") {
+      var returns = graphData[graphData.length - 1] - graphData[0];
+      var percentReturns = (returns / graphData[graphData.length - 1]) * 100;
+      returns = returns.toFixed(5);
+      percentReturns = percentReturns.toFixed(4);
+
+      // Get every nth element to smooth out line of the graph
+      let newArr = [];
+      for (let x = 0; x < graphData.length; x += 10) {
+        newArr.push(graphData[x]);
+      }
+
+      // Push to array
+      code.push(
+        <CryptoComponent key={data.name}>
+          <DetailComponent>
+            <DetialLeft>
+              <Icon source={{ uri: data.icon_address }} />
+              <Text style={styles.iconText}>{data.name}</Text>
+            </DetialLeft>
+            <DetialRight>
+              <Text style={styles.moneyText}>{returns}</Text>
+              <Text style={styles.returnText}>{percentReturns}</Text>
+            </DetialRight>
+          </DetailComponent>
+          <LineChart
+            curve={shape.curveNatural}
+            style={{ height: 66 }}
+            data={newArr}
+            contentInset={{ top: 5, bottom: 5 }}
+            svg={{ stroke: "#F15A29", strokeWidth: 3, strokeOpacity: 0.6 }}
+          ></LineChart>
+        </CryptoComponent>
+      );
     }
 
-    const handlePress = () => console.log("Text Pressed");
-    const data = [
-      50,
-      10,
-      40,
-      95,
-      -4,
-      -24,
-      85,
-      91,
-      35,
-      53,
-      -53,
-      24,
-      50,
-      -20,
-      -80,
-    ];
-
-    //if (typeof this.state.sylo.history !== "undefined")
-    //console.log(this.state.sylo.history[1]);
+    // Setup date component
+    const dates = ["all", "year", "month", "week", "day"];
+    var dateJSX = [];
+    dates.map((date) => {
+      dateJSX.push(
+        <Text
+          key={date}
+          style={
+            this.state.period === date
+              ? styles.dateTextPressed
+              : styles.dateText
+          }
+          onPress={(event) => this.handleDatePress(event)}
+        >
+          {date}
+        </Text>
+      );
+    });
 
     return (
       <SafeAreaView style={GlobalStyles.adroidSafeArea}>
@@ -105,7 +137,6 @@ class LandingPage extends React.Component {
           <HeaderContainer>
             <HeaderText>Tracker</HeaderText>
             <Ionicons
-              onPress={handlePress}
               name="ios-search"
               style={styles.searchIcon}
               size={25}
@@ -113,25 +144,10 @@ class LandingPage extends React.Component {
             />
           </HeaderContainer>
 
-          <DateContainer>
-            <DateText onPress={handlePress}>all</DateText>
-            <DateText onPress={handlePress}>year</DateText>
-            <DateText onPress={handlePress}>month</DateText>
-            <DateText onPress={handlePress}>week</DateText>
-            <DateText onPress={handlePress}>day</DateText>
-          </DateContainer>
+          <DateContainer>{dateJSX}</DateContainer>
         </OuterContainer>
-        <MainContainer>
-          <CryptoComponent>
-            <LineChart
-              curve={shape.curveNatural}
-              style={{ height: 66, top: 56 }}
-              data={data}
-              contentInset={{ top: 5, bottom: 5 }}
-              svg={{ stroke: "#F15A29", strokeWidth: 3, strokeOpacity: 0.6 }}
-            ></LineChart>
-          </CryptoComponent>
-        </MainContainer>
+
+        <MainContainer></MainContainer>
       </SafeAreaView>
     );
   }
@@ -143,5 +159,33 @@ const styles = StyleSheet.create({
   searchIcon: {
     position: "absolute",
     right: "5.26%",
+  },
+  iconText: {
+    fontSize: 15,
+    color: "#495162",
+    lineHeight: 17.58,
+  },
+  moneyText: {
+    fontSize: 15,
+    color: "#495162",
+    lineHeight: 17.58,
+    marginRight: 15,
+    marginTop: 10,
+  },
+  returnText: {
+    fontSize: 12,
+    color: "#33BB5D",
+    lineHeight: 18,
+    marginRight: 15,
+  },
+  dateText: {
+    color: "#8a96aa",
+    lineHeight: 21,
+    fontSize: 15,
+  },
+  dateTextPressed: {
+    color: "#F15A29",
+    lineHeight: 21,
+    fontSize: 15,
   },
 });
