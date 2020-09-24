@@ -3,6 +3,7 @@ import { StyleSheet, View, SafeAreaView } from "react-native";
 import GlobalStyles from "../../../GlobalStyles";
 import { Ionicons } from "@expo/vector-icons";
 import { LineChart, Grid } from "react-native-svg-charts";
+import * as shape from "d3-shape";
 
 import {
   OuterContainer,
@@ -19,6 +20,7 @@ class LandingPage extends React.Component {
     super(props);
     this.state = {
       json: [],
+      sylo: [],
     };
   }
 
@@ -29,6 +31,14 @@ class LandingPage extends React.Component {
     ).then((res) =>
       res.json().then((json) => {
         this.setState({ data: json });
+      })
+    );
+
+    fetch(
+      "https://assets-api.sylo.io/v2/asset/id/0xf293d23bf2cdc05411ca0eddd588eb1977e8dcd4:mainnet:ethereum/rate?fiat=NZD&period=week&type=historic"
+    ).then((res) =>
+      res.json().then((json) => {
+        this.setState({ sylo: json });
       })
     );
   }
@@ -52,6 +62,10 @@ class LandingPage extends React.Component {
       -20,
       -80,
     ];
+
+    if (typeof this.state.sylo.history !== "undefined")
+      console.log(this.state.sylo.history[1]);
+
     return (
       <SafeAreaView style={GlobalStyles.adroidSafeArea}>
         <OuterContainer>
@@ -77,13 +91,12 @@ class LandingPage extends React.Component {
         <MainContainer>
           <CryptoComponent>
             <LineChart
-              style={{ height: 200 }}
+              curve={shape.curveNatural}
+              style={{ height: 66, top: 56 }}
               data={data}
-              svg={{ stroke: "rgb(134, 65, 244)" }}
-              contentInset={{ top: 20, bottom: 20 }}
-            >
-              <Grid />
-            </LineChart>
+              contentInset={{ top: 5, bottom: 5 }}
+              svg={{ stroke: "#F15A29", strokeWidth: 3, strokeOpacity: 0.6 }}
+            ></LineChart>
           </CryptoComponent>
         </MainContainer>
       </SafeAreaView>
