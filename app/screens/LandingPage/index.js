@@ -1,12 +1,16 @@
 import React from "react";
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import { StyleSheet, View, SafeAreaView } from "react-native";
 import GlobalStyles from "../../../GlobalStyles";
 import { Ionicons } from "@expo/vector-icons";
+
 import {
   OuterContainer,
   HeaderContainer,
   DateContainer,
   DateText,
+  HeaderText,
+  CryptoComponent,
+  MainContainer,
 } from "./style";
 
 class LandingPage extends React.Component {
@@ -30,12 +34,28 @@ class LandingPage extends React.Component {
 
   render() {
     const handlePress = () => console.log("Text Pressed");
-
+    const data = [
+      50,
+      10,
+      40,
+      95,
+      -4,
+      -24,
+      85,
+      91,
+      35,
+      53,
+      -53,
+      24,
+      50,
+      -20,
+      -80,
+    ];
     return (
       <SafeAreaView style={GlobalStyles.adroidSafeArea}>
         <OuterContainer>
           <HeaderContainer>
-            <Text>Tracker</Text>
+            <HeaderText>Tracker</HeaderText>
             <Ionicons
               onPress={handlePress}
               name="ios-search"
@@ -53,8 +73,9 @@ class LandingPage extends React.Component {
             <DateText onPress={handlePress}>day</DateText>
           </DateContainer>
         </OuterContainer>
-
-        <View style={styles.mainContainer}></View>
+        <MainContainer>
+          <CryptoComponent></CryptoComponent>
+        </MainContainer>
       </SafeAreaView>
     );
   }
@@ -63,5 +84,8 @@ class LandingPage extends React.Component {
 export default LandingPage;
 
 const styles = StyleSheet.create({
-  mainContainer: {},
+  searchIcon: {
+    position: "absolute",
+    right: "5.26%",
+  },
 });
