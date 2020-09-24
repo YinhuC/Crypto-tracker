@@ -13,8 +13,6 @@ import {
   CryptoComponent,
   MainContainer,
   DetailComponent,
-  DetialLeft,
-  DetialRight,
   Icon,
 } from "./style";
 
@@ -30,10 +28,11 @@ class LandingPage extends React.Component {
 
   componentDidMount() {
     const { route } = this.props;
-    const { data, period } = route.params;
+    const { data, period, graphData } = route.params;
     this.setState({
       period: period,
       data: data,
+      graphData: graphData,
     });
   }
 
@@ -50,12 +49,9 @@ class LandingPage extends React.Component {
       .then((res) =>
         res.json().then((json) => {
           var rate = json.history.map((data) => data.rate);
-          this.setState((prevState) => ({
-            graphData: {
-              [item.name]: rate,
-              ...prevState.graphData,
-            },
-          }));
+          this.setState({
+            graphData: rate,
+          });
         })
       )
       .catch(function (error) {
@@ -74,10 +70,17 @@ class LandingPage extends React.Component {
 
   render() {
     const { navigation } = this.props;
+    const { data, graphData } = this.state;
+    var code = [];
 
-    //console.log(this.state.data);
+    if (
+      typeof graphData != "undefined" &&
+      graphData != null &&
+      graphData.length != null &&
+      graphData.length > 0
+    ) {
+      this.getData(this.state.data.id);
 
-    if (typeof graphData != "undefined") {
       var returns = graphData[graphData.length - 1] - graphData[0];
       var percentReturns = (returns / graphData[graphData.length - 1]) * 100;
       returns = returns.toFixed(5);
@@ -93,14 +96,21 @@ class LandingPage extends React.Component {
       code.push(
         <CryptoComponent key={data.name}>
           <DetailComponent>
-            <DetialLeft>
-              <Icon source={{ uri: data.icon_address }} />
-              <Text style={styles.iconText}>{data.name}</Text>
-            </DetialLeft>
-            <DetialRight>
-              <Text style={styles.moneyText}>{returns}</Text>
-              <Text style={styles.returnText}>{percentReturns}</Text>
-            </DetialRight>
+            {returns < 0 ? (
+              <>
+                <Text style={styles.moneyText}>${graphData[0].toFixed(5)}</Text>
+                <Text style={styles.returnTextN}>
+                  {percentReturns}% (${returns})
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text style={styles.moneyText}>${graphData[0].toFixed(5)}</Text>
+                <Text style={styles.returnTextP}>
+                  +{percentReturns}% (${returns})
+                </Text>
+              </>
+            )}
           </DetailComponent>
           <LineChart
             curve={shape.curveNatural}
@@ -149,7 +159,7 @@ class LandingPage extends React.Component {
           <DateContainer>{dateJSX}</DateContainer>
         </OuterContainer>
 
-        <MainContainer></MainContainer>
+        <MainContainer>{code}</MainContainer>
       </SafeAreaView>
     );
   }
@@ -168,15 +178,21 @@ const styles = StyleSheet.create({
     lineHeight: 17.58,
   },
   moneyText: {
-    fontSize: 15,
+    fontSize: 18,
     color: "#495162",
     lineHeight: 17.58,
     marginRight: 15,
-    marginTop: 10,
+    marginTop: 12,
   },
-  returnText: {
+  returnTextP: {
     fontSize: 12,
     color: "#33BB5D",
+    lineHeight: 18,
+    marginRight: 15,
+  },
+  returnTextN: {
+    fontSize: 12,
+    color: "red",
     lineHeight: 18,
     marginRight: 15,
   },

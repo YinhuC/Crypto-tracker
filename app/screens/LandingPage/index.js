@@ -76,11 +76,16 @@ class LandingPage extends React.Component {
       var graphData = this.state.graphData[name];
 
       // Calculate returns and data
-      if (typeof graphData != "undefined") {
+      if (
+        typeof graphData != "undefined" &&
+        graphData != null &&
+        graphData.length != null &&
+        graphData.length > 0
+      ) {
         var returns = graphData[graphData.length - 1] - graphData[0];
         var percentReturns = (returns / graphData[graphData.length - 1]) * 100;
-        returns = returns.toFixed(5);
-        percentReturns = percentReturns.toFixed(4);
+        returns = returns.toFixed(4);
+        percentReturns = percentReturns.toFixed(2);
 
         // Get every nth element to smooth out line of the graph
         let newArr = [];
@@ -96,6 +101,7 @@ class LandingPage extends React.Component {
               navigation.navigate("DetailPage", {
                 period: this.state.period,
                 data: data,
+                graphData: graphData,
               })
             }
           >
@@ -105,8 +111,25 @@ class LandingPage extends React.Component {
                 <Text style={styles.iconText}>{name}</Text>
               </DetialLeft>
               <DetialRight>
-                <Text style={styles.moneyText}>{returns}</Text>
-                <Text style={styles.returnText}>{percentReturns}</Text>
+                {returns < 0 ? (
+                  <>
+                    <Text style={styles.moneyText}>
+                      ${graphData[0].toFixed(5)}
+                    </Text>
+                    <Text style={styles.returnTextN}>
+                      {percentReturns}% (${returns})
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <Text style={styles.moneyText}>
+                      ${graphData[0].toFixed(5)}
+                    </Text>
+                    <Text style={styles.returnTextP}>
+                      +{percentReturns}% (${returns})
+                    </Text>
+                  </>
+                )}
               </DetialRight>
             </DetailComponent>
             <LineChart
@@ -204,9 +227,15 @@ const styles = StyleSheet.create({
     marginRight: 15,
     marginTop: 10,
   },
-  returnText: {
+  returnTextP: {
     fontSize: 12,
     color: "#33BB5D",
+    lineHeight: 18,
+    marginRight: 15,
+  },
+  returnTextN: {
+    fontSize: 12,
+    color: "red",
     lineHeight: 18,
     marginRight: 15,
   },

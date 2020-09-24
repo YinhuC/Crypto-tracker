@@ -31,13 +31,13 @@ export const CryptoComponent = styled.View`
   background: #ffffff;
   border: 2px solid #f6f6f6;
   border-radius: 15px;
-  width: 343px;
-  height: 140px;
-  margin-bottom: 16px;
+  width: 335px;
+  height: 185px;
+  margin-bottom: 30px;
 `;
 
 export const MainContainer = styled.View`
-  margin-top: 16px;
+  margin-top: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -45,23 +45,8 @@ export const MainContainer = styled.View`
 export const DetailComponent = styled.View`
   height: 56px;
   display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-`;
-
-export const DetialLeft = styled.View`
-  height: 56px;
-  display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: row;
-`;
-
-export const DetialRight = styled.View`
-  height: 56px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
   flex-direction: column;
 `;
 
