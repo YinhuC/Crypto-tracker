@@ -27,7 +27,7 @@ export const HeaderText = styled.Text`
   color: #495162;
 `;
 
-export const CryptoComponent = styled.View`
+export const CryptoComponent = styled.TouchableOpacity`
   background: #ffffff;
   border: 2px solid #f6f6f6;
   border-radius: 15px;

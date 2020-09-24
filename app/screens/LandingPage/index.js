@@ -67,6 +67,8 @@ class LandingPage extends React.Component {
   };
 
   getJSX() {
+    const { navigation } = this.props;
+
     var code = [];
 
     // For every currency returned, create a component
@@ -88,7 +90,10 @@ class LandingPage extends React.Component {
 
         // Push to array
         code.push(
-          <CryptoComponent key={data.name}>
+          <CryptoComponent
+            key={data.name}
+            onPress={() => navigation.navigate("DetailPage")}
+          >
             <DetailComponent>
               <DetialLeft>
                 <Icon source={{ uri: data.icon_address }} />
