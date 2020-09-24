@@ -2,7 +2,12 @@ import React from "react";
 import { StyleSheet, Text, View, SafeAreaView } from "react-native";
 import GlobalStyles from "../../../GlobalStyles";
 import { Ionicons } from "@expo/vector-icons";
-import { OuterContainer, HeaderContainer, DateContainer } from "./style";
+import {
+  OuterContainer,
+  HeaderContainer,
+  DateContainer,
+  DateText,
+} from "./style";
 
 class LandingPage extends React.Component {
   constructor(props) {
@@ -30,11 +35,10 @@ class LandingPage extends React.Component {
       <SafeAreaView style={GlobalStyles.adroidSafeArea}>
         <OuterContainer>
           <HeaderContainer>
-            <View style={styles.space} />
-            <Text style={styles.headerText}>Tracker</Text>
+            <Text>Tracker</Text>
             <Ionicons
               onPress={handlePress}
-              name="md-search"
+              name="ios-search"
               style={styles.searchIcon}
               size={25}
               color="black"
@@ -42,21 +46,11 @@ class LandingPage extends React.Component {
           </HeaderContainer>
 
           <DateContainer>
-            <Text style={styles.dateText} onPress={handlePress}>
-              all
-            </Text>
-            <Text style={styles.dateText} onPress={handlePress}>
-              year
-            </Text>
-            <Text style={styles.dateText} onPress={handlePress}>
-              month
-            </Text>
-            <Text style={styles.dateText} onPress={handlePress}>
-              week
-            </Text>
-            <Text style={styles.dateText} onPress={handlePress}>
-              day
-            </Text>
+            <DateText onPress={handlePress}>all</DateText>
+            <DateText onPress={handlePress}>year</DateText>
+            <DateText onPress={handlePress}>month</DateText>
+            <DateText onPress={handlePress}>week</DateText>
+            <DateText onPress={handlePress}>day</DateText>
           </DateContainer>
         </OuterContainer>
 
