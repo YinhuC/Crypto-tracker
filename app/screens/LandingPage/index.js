@@ -162,6 +162,9 @@ class LandingPage extends React.Component {
       typeof this.state.graphData != "undefined" &&
       Object.keys(this.state.graphData).length !== 0
     ) {
+      // This takes too long to update all the graphs, blocks the user
+      // this.getData();
+
       var cryptoJSX = this.getJSX();
     }
 
