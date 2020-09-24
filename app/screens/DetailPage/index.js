@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, SafeAreaView, Text } from "react-native";
 import GlobalStyles from "../../../GlobalStyles";
-import { Ionicons } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import { LineChart } from "react-native-svg-charts";
 import * as shape from "d3-shape";
 
@@ -23,47 +23,44 @@ class LandingPage extends React.Component {
     super(props);
     this.state = {
       data: [],
-      sylo: [],
+      name: "",
       period: "month",
     };
   }
 
   componentDidMount() {
-    // Fetch the data when the screen loads
-    fetch("https://assets-api.sylo.io/v2/all").then((res) =>
-      res.json().then((json) => {
-        this.setState({ data: json });
-        this.getData();
-      })
-    );
+    const { route } = this.props;
+    const { data, period } = route.params;
+    this.setState({
+      period: period,
+      data: data,
+    });
   }
 
-  getData = () => {
-    this.state.data.forEach((item) => {
-      // Get coin data
-      fetch(
-        "https://assets-api.sylo.io/v2/asset/id/" +
-          item.id +
-          "/rate?fiat=NZD&" +
-          "period=" +
-          this.state.period +
-          "&type=historic"
+  getData = (id) => {
+    // Get coin data
+    fetch(
+      "https://assets-api.sylo.io/v2/asset/id/" +
+        id +
+        "/rate?fiat=NZD&" +
+        "period=" +
+        this.state.period +
+        "&type=historic"
+    )
+      .then((res) =>
+        res.json().then((json) => {
+          var rate = json.history.map((data) => data.rate);
+          this.setState((prevState) => ({
+            graphData: {
+              [item.name]: rate,
+              ...prevState.graphData,
+            },
+          }));
+        })
       )
-        .then((res) =>
-          res.json().then((json) => {
-            var rate = json.history.map((data) => data.rate);
-            this.setState((prevState) => ({
-              graphData: {
-                [item.name]: rate,
-                ...prevState.graphData,
-              },
-            }));
-          })
-        )
-        .catch(function (error) {
-          console.log(error);
-        });
-    });
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   handleDatePress(event) {
@@ -76,6 +73,10 @@ class LandingPage extends React.Component {
   }
 
   render() {
+    const { navigation } = this.props;
+
+    //console.log(this.state.data);
+
     if (typeof graphData != "undefined") {
       var returns = graphData[graphData.length - 1] - graphData[0];
       var percentReturns = (returns / graphData[graphData.length - 1]) * 100;
@@ -135,13 +136,14 @@ class LandingPage extends React.Component {
       <SafeAreaView style={GlobalStyles.adroidSafeArea}>
         <OuterContainer>
           <HeaderContainer>
-            <HeaderText>Tracker</HeaderText>
-            <Ionicons
-              name="ios-search"
-              style={styles.searchIcon}
-              size={25}
+            <Entypo
+              onPress={() => navigation.goBack()}
+              name="chevron-thin-left"
+              size={24}
               color="black"
+              style={styles.backIcon}
             />
+            <HeaderText>Tracker</HeaderText>
           </HeaderContainer>
 
           <DateContainer>{dateJSX}</DateContainer>
@@ -156,9 +158,9 @@ class LandingPage extends React.Component {
 export default LandingPage;
 
 const styles = StyleSheet.create({
-  searchIcon: {
+  backIcon: {
     position: "absolute",
-    right: "5.26%",
+    left: 17.77,
   },
   iconText: {
     fontSize: 15,

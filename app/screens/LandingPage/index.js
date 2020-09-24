@@ -23,7 +23,6 @@ class LandingPage extends React.Component {
     super(props);
     this.state = {
       data: [],
-      sylo: [],
       period: "month",
     };
   }
@@ -73,7 +72,8 @@ class LandingPage extends React.Component {
 
     // For every currency returned, create a component
     this.state.data.map((data) => {
-      var graphData = this.state.graphData[data.name];
+      var name = data.name;
+      var graphData = this.state.graphData[name];
 
       // Calculate returns and data
       if (typeof graphData != "undefined") {
@@ -91,13 +91,18 @@ class LandingPage extends React.Component {
         // Push to array
         code.push(
           <CryptoComponent
-            key={data.name}
-            onPress={() => navigation.navigate("DetailPage")}
+            key={name}
+            onPress={() =>
+              navigation.navigate("DetailPage", {
+                period: this.state.period,
+                data: data,
+              })
+            }
           >
             <DetailComponent>
               <DetialLeft>
                 <Icon source={{ uri: data.icon_address }} />
-                <Text style={styles.iconText}>{data.name}</Text>
+                <Text style={styles.iconText}>{name}</Text>
               </DetialLeft>
               <DetialRight>
                 <Text style={styles.moneyText}>{returns}</Text>
