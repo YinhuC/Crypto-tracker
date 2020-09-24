@@ -2,8 +2,9 @@ import React from "react";
 import { StyleSheet, SafeAreaView, Text } from "react-native";
 import GlobalStyles from "../../../GlobalStyles";
 import { Entypo } from "@expo/vector-icons";
-import { LineChart } from "react-native-svg-charts";
+import { AreaChart } from "react-native-svg-charts";
 import * as shape from "d3-shape";
+import { LinearGradient, Stop, Defs } from "react-native-svg";
 
 import {
   OuterContainer,
@@ -14,6 +15,11 @@ import {
   MainContainer,
   DetailComponent,
   Icon,
+  TitleComponent,
+  DescriptionContainer,
+  DescriptionLeft,
+  DescriptionRight,
+  Description,
 } from "./style";
 
 class LandingPage extends React.Component {
@@ -49,8 +55,14 @@ class LandingPage extends React.Component {
       .then((res) =>
         res.json().then((json) => {
           var rate = json.history.map((data) => data.rate);
+          var cap = json.market_cap.toFixed(2);
+          var volume = json.volume_24h.toFixed(2);
+          var fiat = json.fiat_symbol;
           this.setState({
             graphData: rate,
+            cap: cap,
+            volume: volume,
+            fiat: fiat,
           });
         })
       )
@@ -72,6 +84,15 @@ class LandingPage extends React.Component {
     const { navigation } = this.props;
     const { data, graphData } = this.state;
     var code = [];
+
+    const Gradient = () => (
+      <Defs key={"gradient"}>
+        <LinearGradient id={"gradient"} x1={"0%"} y={"0%"} x2={"0%"} y2={"40%"}>
+          <Stop offset={"0%"} stopColor={"rgb(241,90,41)"} stopOpacity={0.2} />
+          <Stop offset={"100%"} stopColor={"rgb(241,90,41)"} stopOpacity={0} />
+        </LinearGradient>
+      </Defs>
+    );
 
     if (
       typeof graphData != "undefined" &&
@@ -112,13 +133,20 @@ class LandingPage extends React.Component {
               </>
             )}
           </DetailComponent>
-          <LineChart
+          <AreaChart
             curve={shape.curveNatural}
-            style={{ height: 66 }}
+            style={{ height: 117 }}
             data={newArr}
             contentInset={{ top: 5, bottom: 5 }}
-            svg={{ stroke: "#F15A29", strokeWidth: 3, strokeOpacity: 0.6 }}
-          ></LineChart>
+            svg={{
+              strokeWidth: 2,
+              fill: "url(#gradient)",
+              stroke: "#F15A29",
+              strokeOpacity: 0.5,
+            }}
+          >
+            <Gradient />
+          </AreaChart>
         </CryptoComponent>
       );
     }
@@ -153,13 +181,36 @@ class LandingPage extends React.Component {
               color="black"
               style={styles.backIcon}
             />
-            <HeaderText>Tracker</HeaderText>
+            <TitleComponent>
+              <Icon source={{ uri: data.icon_address }} />
+              <HeaderText>{data.name}</HeaderText>
+            </TitleComponent>
           </HeaderContainer>
 
           <DateContainer>{dateJSX}</DateContainer>
         </OuterContainer>
 
         <MainContainer>{code}</MainContainer>
+
+        <DescriptionContainer>
+          <Text style={styles.descriptionTitle}>Information</Text>
+        </DescriptionContainer>
+        <Description>
+          <DescriptionLeft>
+            <Text style={styles.description}>Symbol:</Text>
+            <Text style={styles.description}>Market Cap:</Text>
+            <Text style={styles.description}>24h Volume:</Text>
+          </DescriptionLeft>
+          <DescriptionRight>
+            <Text style={styles.description}>{data.symbol} </Text>
+            <Text style={styles.description}>
+              ${this.state.cap} {this.state.fiat}
+            </Text>
+            <Text style={styles.description}>
+              ${this.state.volume} {this.state.fiat}
+            </Text>
+          </DescriptionRight>
+        </Description>
       </SafeAreaView>
     );
   }
@@ -205,5 +256,18 @@ const styles = StyleSheet.create({
     color: "#F15A29",
     lineHeight: 21,
     fontSize: 15,
+  },
+  descriptionTitle: {
+    color: "#495162",
+    lineHeight: 21,
+    marginBottom: 12,
+    fontSize: 15,
+  },
+  description: {
+    color: "#8A96AA",
+    lineHeight: 21,
+    fontSize: 15,
+    marginBottom: 12,
+    marginLeft: 34,
   },
 });

@@ -56,3 +56,37 @@ export const Icon = styled.Image`
   margin-left: 14px;
   margin-right: 12px;
 `;
+
+export const TitleComponent = styled.View`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+`;
+
+export const DescriptionContainer = styled.View`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`;
+
+export const DescriptionLeft = styled.View`
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+`;
+
+export const DescriptionRight = styled.View`
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+`;
+
+export const Description = styled.View`
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: row;
+`;
