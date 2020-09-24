@@ -9,7 +9,6 @@ import {
   OuterContainer,
   HeaderContainer,
   DateContainer,
-  DateText,
   HeaderText,
   CryptoComponent,
   MainContainer,
@@ -25,7 +24,7 @@ class LandingPage extends React.Component {
     this.state = {
       data: [],
       sylo: [],
-      period: "week",
+      period: "month",
     };
   }
 
@@ -89,7 +88,7 @@ class LandingPage extends React.Component {
 
         // Push to array
         code.push(
-          <CryptoComponent>
+          <CryptoComponent key={data.name}>
             <DetailComponent>
               <DetialLeft>
                 <Icon source={{ uri: data.icon_address }} />
@@ -114,18 +113,43 @@ class LandingPage extends React.Component {
 
     return code;
   }
+  handleDatePress(event) {
+    this.setState({
+      period: event._dispatchInstances.memoizedProps.children,
+    });
+
+    // Get new data for new period
+    // this.getData();
+  }
 
   render() {
-    const handlePress = () => console.log("Text Pressed");
-
     // Push JSX into array and setup data
     if (
       this.state.data.length > 0 &&
       typeof this.state.graphData != "undefined" &&
       Object.keys(this.state.graphData).length !== 0
     ) {
-      var code = this.getJSX();
+      var cryptoJSX = this.getJSX();
     }
+
+    // Setup date component
+    const dates = ["all", "year", "month", "week", "day"];
+    var dateJSX = [];
+    dates.map((date) => {
+      dateJSX.push(
+        <Text
+          key={date}
+          style={
+            this.state.period === date
+              ? styles.dateTextPressed
+              : styles.dateText
+          }
+          onPress={(event) => this.handleDatePress(event)}
+        >
+          {date}
+        </Text>
+      );
+    });
 
     return (
       <SafeAreaView style={GlobalStyles.adroidSafeArea}>
@@ -134,7 +158,6 @@ class LandingPage extends React.Component {
             <HeaderContainer>
               <HeaderText>Tracker</HeaderText>
               <Ionicons
-                onPress={handlePress}
                 name="ios-search"
                 style={styles.searchIcon}
                 size={25}
@@ -142,15 +165,10 @@ class LandingPage extends React.Component {
               />
             </HeaderContainer>
 
-            <DateContainer>
-              <DateText onPress={handlePress}>all</DateText>
-              <DateText onPress={handlePress}>year</DateText>
-              <DateText onPress={handlePress}>month</DateText>
-              <DateText onPress={handlePress}>week</DateText>
-              <DateText onPress={handlePress}>day</DateText>
-            </DateContainer>
+            <DateContainer>{dateJSX}</DateContainer>
           </OuterContainer>
-          <MainContainer>{code}</MainContainer>
+
+          <MainContainer>{cryptoJSX}</MainContainer>
         </ScrollView>
       </SafeAreaView>
     );
@@ -181,5 +199,15 @@ const styles = StyleSheet.create({
     color: "#33BB5D",
     lineHeight: 18,
     marginRight: 15,
+  },
+  dateText: {
+    color: "#8a96aa",
+    lineHeight: 21,
+    fontSize: 15,
+  },
+  dateTextPressed: {
+    color: "#F15A29",
+    lineHeight: 21,
+    fontSize: 15,
   },
 });

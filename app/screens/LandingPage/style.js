@@ -18,12 +18,6 @@ export const DateContainer = styled.View`
   flex-direction: row;
 `;
 
-export const DateText = styled.Text`
-  color: #8a96aa;
-  font-size: 15px;
-  line-height: 21px;
-`;
-
 export const HeaderText = styled.Text`
   font-size: 18px;
   line-height: 21.09px;
