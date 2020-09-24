@@ -39,7 +39,6 @@ export const CryptoComponent = styled.View`
   border-radius: 15px;
   width: 343px;
   height: 140px;
-  margin-bottom: 16px;
 `;
 
 export const MainContainer = styled.View`
@@ -47,33 +46,4 @@ export const MainContainer = styled.View`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-export const DetailComponent = styled.View`
-  height: 56px;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-`;
-
-export const DetialLeft = styled.View`
-  height: 56px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-`;
-
-export const DetialRight = styled.View`
-  height: 56px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  flex-direction: column;
-`;
-
-export const Icon = styled.Image`
-  height: 36px;
-  width: 36px;
-  margin-left: 14px;
-  margin-right: 12px;
 `;
