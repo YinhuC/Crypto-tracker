@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Crypto-tracker",
-    "slug": "Crypto-tracker",
+    "slug": "yinhu-crypto-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",
@@ -13,12 +13,16 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "",
+    "githubUrl": "https://github.com/YinhuC/Crypto-tracker"
   }
 }
