@@ -1,7 +1,7 @@
 # Crypto-tracker
 This is a react-native application which tracks many different types of crypto-currencies.
-Take a look here:
-https://expo.io/@/yinhu-crypto-tracker
+Take a look here(might not be working):
+https://expo.io/@yinhuc/yinhu-crypto-tracker
 
 Make sure node is up to date, greater than version 12.14.1
 
