@@ -7,13 +7,13 @@ import {
   Switch,
   Modal,
   StatusBar,
-  InteractionManager,
 } from "react-native";
 import GlobalStyles from "../../../GlobalStyles";
 import { Ionicons } from "@expo/vector-icons";
 import { LineChart } from "react-native-svg-charts";
 import * as shape from "d3-shape";
 import { Entypo } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
 import {
   OuterContainer,
@@ -28,6 +28,8 @@ import {
   ModalContainer,
   SearchContainer,
   Input,
+  ResultContainer,
+  Result,
 } from "./style";
 
 class LandingPage extends React.Component {
@@ -35,6 +37,7 @@ class LandingPage extends React.Component {
     super(props);
     this.state = {
       data: [],
+      names: [],
       darkMode: false,
       backgroundColor: "white",
       iconColor: "black",
@@ -49,7 +52,8 @@ class LandingPage extends React.Component {
     // Fetch the data when the screen loads
     fetch("https://assets-api.sylo.io/v2/all").then((res) =>
       res.json().then((json) => {
-        this.setState({ data: json });
+        var names = json.map((data) => data.name);
+        this.setState({ data: json, names: names });
         this.getData();
       })
     );
@@ -61,6 +65,7 @@ class LandingPage extends React.Component {
       backgroundColor: this.state.darkMode ? "white" : "black",
       iconColor: this.state.darkMode ? "black" : "white",
       borderColor: this.state.darkMode ? "#f6f6f6" : "#161616",
+      searchColor: this.state.darkMode ? "#161616" : "#f6f6f6",
     });
   }
 
@@ -225,8 +230,56 @@ class LandingPage extends React.Component {
   }
 
   handleText(text) {
+    const { navigation } = this.props;
+
+    var arr = this.state.names.filter(
+      (name) => text === name.substring(0, text.length)
+    );
+    if (
+      this.state.data.length > 0 &&
+      typeof this.state.graphData != "undefined" &&
+      Object.keys(this.state.graphData).length !== 0
+    ) {
+      var searchJSX = [];
+      arr.map((name, index) => {
+        var data = this.state.data.filter((data) => data.name === name);
+        searchJSX.push(
+          <Result
+            key={index}
+            onPress={() => {
+              navigation.navigate("DetailPage", {
+                period: this.state.period,
+                data: data[0],
+                graphData: this.state.graphData[name],
+                iconColor: this.state.iconColor,
+                backgroundColor: this.state.backgroundColor,
+                borderColor: this.state.borderColor,
+                darkMode: this.state.darkMode,
+              });
+              this.handleModal();
+            }}
+          >
+            <AntDesign
+              name="arrowright"
+              size={24}
+              color={this.state.iconColor}
+              style={{ marginRight: 20 }}
+            />
+            <Text
+              style={
+                !this.state.darkMode ? styles.iconText : darkStyles.iconText
+              }
+            >
+              {name}
+            </Text>
+          </Result>
+        );
+      });
+    }
+
     this.setState({
       text: text,
+      searchJSX: searchJSX,
     });
   }
 
@@ -275,8 +328,12 @@ class LandingPage extends React.Component {
             onRequestClose={() => this.handleModal()}
             transparent
           >
-            <ModalContainer>
-              <SearchContainer>
+            <ModalContainer
+              style={{ backgroundColor: this.state.backgroundColor }}
+            >
+              <SearchContainer
+                style={{ borderBottomColor: this.state.searchColor }}
+              >
                 <Entypo
                   onPress={() => this.handleModal()}
                   name="chevron-thin-left"
@@ -286,11 +343,13 @@ class LandingPage extends React.Component {
                 />
                 <Input
                   onChangeText={(text) => this.handleText(text)}
+                  style={{ borderColor: this.state.searchColor }}
                   value={this.state.text}
                   returnKeyType="search"
                   autoFocus={this.state.modal}
                 />
               </SearchContainer>
+              <ResultContainer>{this.state.searchJSX}</ResultContainer>
             </ModalContainer>
           </Modal>
 

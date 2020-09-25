@@ -111,7 +111,7 @@ class LandingPage extends React.Component {
       graphData.length != null &&
       graphData.length > 0
     ) {
-      this.getData(this.state.data.id);
+      this.getData(data.id);
 
       var returns = graphData[graphData.length - 1] - graphData[0];
       var percentReturns = (returns / graphData[graphData.length - 1]) * 100;

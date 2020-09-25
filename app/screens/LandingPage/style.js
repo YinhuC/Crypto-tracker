@@ -77,7 +77,6 @@ export const ModalContainer = styled.View`
 export const Input = styled.TextInput`
   height: 50px;
   width: 80%;
-  border-color: grey;
   border-width: 1px;
   padding: 15px;
   border-radius: 20px;
@@ -91,6 +90,22 @@ export const SearchContainer = styled.View`
   justify-content: center;
   align-items: center;
   width: 100%;
-  border-bottom-color: grey;
   border-bottom-width: 1px;
+`;
+
+export const ResultContainer = styled.View`
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-left: 20px;
+  margin: 20px;
+`;
+
+export const Result = styled.TouchableOpacity`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 8px;
+  margin-left: 20px;
 `;
