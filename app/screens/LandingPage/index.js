@@ -5,6 +5,8 @@ import {
   Text,
   ScrollView,
   Switch,
+  Modal,
+  TextInput,
   StatusBar,
 } from "react-native";
 import GlobalStyles from "../../../GlobalStyles";
@@ -22,6 +24,8 @@ import {
   DetialLeft,
   DetialRight,
   Icon,
+  CenterModal,
+  ModalContainer,
 } from "./style";
 
 class LandingPage extends React.Component {
@@ -34,6 +38,8 @@ class LandingPage extends React.Component {
       iconColor: "black",
       borderColor: "#f6f6f6",
       period: "month",
+      modal: false,
+      text: "",
     };
   }
 
@@ -200,6 +206,13 @@ class LandingPage extends React.Component {
 
     return code;
   }
+
+  handleModal() {
+    this.setState({
+      modal: !this.state.modal,
+    });
+  }
+
   handleDatePress(event) {
     this.setState({
       period: event._dispatchInstances.memoizedProps.children,
@@ -207,6 +220,12 @@ class LandingPage extends React.Component {
 
     // Get new data for new period
     // this.getData();
+  }
+
+  handleText(text) {
+    this.setState({
+      text: text,
+    });
   }
 
   render() {
@@ -248,6 +267,29 @@ class LandingPage extends React.Component {
             barStyle={!this.state.darkMode ? "dark-content" : "light-content"}
             backgroundColor={this.state.backgroundColor}
           />
+          <Modal
+            animationType="fade"
+            visible={this.state.modal}
+            onRequestClose={() => this.handleModal()}
+            transparent
+          >
+            <CenterModal onPress={() => this.handleModal()}>
+              <ModalContainer>
+                <TextInput
+                  style={{
+                    height: "50%",
+                    width: "70%",
+                    borderColor: "gray",
+                    borderWidth: 1,
+                    padding: 3,
+                  }}
+                  onChangeText={(text) => this.handleText(text)}
+                  value={this.state.text}
+                />
+              </ModalContainer>
+            </CenterModal>
+          </Modal>
+
           <OuterContainer
             style={{ backgroundColor: this.state.backgroundColor }}
           >
@@ -280,6 +322,7 @@ class LandingPage extends React.Component {
                 }}
                 size={25}
                 color="black"
+                onPress={() => this.handleModal()}
               />
             </HeaderContainer>
 

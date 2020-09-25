@@ -63,3 +63,22 @@ export const Icon = styled.Image`
   margin-left: 14px;
   margin-right: 12px;
 `;
+
+export const ModalContainer = styled.View`
+  height: 60px;
+  width: 80%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  elevation: 20;
+  margin-top: 20%;
+`;
+
+export const CenterModal = styled.TouchableOpacity`
+  flex: 1;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+`;
