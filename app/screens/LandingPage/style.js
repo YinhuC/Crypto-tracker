@@ -65,20 +65,32 @@ export const Icon = styled.Image`
 `;
 
 export const ModalContainer = styled.View`
-  height: 60px;
-  width: 80%;
+  height: 100%;
+  width: 100%;
   background-color: white;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 15px;
-  elevation: 20;
-  margin-top: 20%;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-top: 10px;
 `;
 
-export const CenterModal = styled.TouchableOpacity`
-  flex: 1;
-  justify-content: flex-start;
+export const Input = styled.TextInput`
+  height: 50px;
+  width: 80%;
+  border-color: grey;
+  border-width: 1px;
+  padding: 15px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  font-size: 18px;
+`;
+
+export const SearchContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  border-bottom-color: grey;
+  border-bottom-width: 1px;
 `;

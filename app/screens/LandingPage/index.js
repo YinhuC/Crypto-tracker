@@ -6,13 +6,14 @@ import {
   ScrollView,
   Switch,
   Modal,
-  TextInput,
   StatusBar,
+  InteractionManager,
 } from "react-native";
 import GlobalStyles from "../../../GlobalStyles";
 import { Ionicons } from "@expo/vector-icons";
 import { LineChart } from "react-native-svg-charts";
 import * as shape from "d3-shape";
+import { Entypo } from "@expo/vector-icons";
 
 import {
   OuterContainer,
@@ -24,8 +25,9 @@ import {
   DetialLeft,
   DetialRight,
   Icon,
-  CenterModal,
   ModalContainer,
+  SearchContainer,
+  Input,
 } from "./style";
 
 class LandingPage extends React.Component {
@@ -273,21 +275,23 @@ class LandingPage extends React.Component {
             onRequestClose={() => this.handleModal()}
             transparent
           >
-            <CenterModal onPress={() => this.handleModal()}>
-              <ModalContainer>
-                <TextInput
-                  style={{
-                    height: "50%",
-                    width: "70%",
-                    borderColor: "gray",
-                    borderWidth: 1,
-                    padding: 3,
-                  }}
+            <ModalContainer>
+              <SearchContainer>
+                <Entypo
+                  onPress={() => this.handleModal()}
+                  name="chevron-thin-left"
+                  size={24}
+                  color={this.state.iconColor}
+                  style={{ marginBottom: 10 }}
+                />
+                <Input
                   onChangeText={(text) => this.handleText(text)}
                   value={this.state.text}
+                  returnKeyType="search"
+                  autoFocus={this.state.modal}
                 />
-              </ModalContainer>
-            </CenterModal>
+              </SearchContainer>
+            </ModalContainer>
           </Modal>
 
           <OuterContainer
@@ -322,7 +326,9 @@ class LandingPage extends React.Component {
                 }}
                 size={25}
                 color="black"
-                onPress={() => this.handleModal()}
+                onPress={() => {
+                  this.handleModal();
+                }}
               />
             </HeaderContainer>
 
