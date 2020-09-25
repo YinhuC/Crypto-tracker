@@ -29,11 +29,12 @@ export const HeaderText = styled.Text`
 
 export const CryptoComponent = styled.View`
   background: #ffffff;
-  border: 2px solid #f6f6f6;
   border-radius: 15px;
   width: 335px;
   height: 185px;
   margin-bottom: 30px;
+  border-style: solid;
+  border-width: 2px;
 `;
 
 export const MainContainer = styled.View`

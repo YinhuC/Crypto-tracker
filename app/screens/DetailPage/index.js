@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, SafeAreaView, Text } from "react-native";
+import { StyleSheet, SafeAreaView, Text, ScrollView } from "react-native";
 import GlobalStyles from "../../../GlobalStyles";
 import { Entypo } from "@expo/vector-icons";
 import { AreaChart } from "react-native-svg-charts";
@@ -10,7 +10,6 @@ import {
   OuterContainer,
   HeaderContainer,
   DateContainer,
-  HeaderText,
   CryptoComponent,
   MainContainer,
   DetailComponent,
@@ -34,11 +33,23 @@ class LandingPage extends React.Component {
 
   componentDidMount() {
     const { route } = this.props;
-    const { data, period, graphData } = route.params;
+    const {
+      data,
+      period,
+      graphData,
+      borderColor,
+      backgroundColor,
+      iconColor,
+      darkMode,
+    } = route.params;
     this.setState({
       period: period,
       data: data,
       graphData: graphData,
+      borderColor: borderColor,
+      backgroundColor: backgroundColor,
+      iconColor: iconColor,
+      darkMode: darkMode,
     });
   }
 
@@ -115,18 +126,40 @@ class LandingPage extends React.Component {
 
       // Push to array
       code.push(
-        <CryptoComponent key={data.name}>
+        <CryptoComponent
+          key={data.name}
+          style={{
+            backgroundColor: this.state.backgroundColor,
+            borderColor: this.state.borderColor,
+          }}
+        >
           <DetailComponent>
             {returns < 0 ? (
               <>
-                <Text style={styles.moneyText}>${graphData[0].toFixed(5)}</Text>
+                <Text
+                  style={
+                    this.state.darkMode
+                      ? darkStyles.moneyText
+                      : styles.moneyText
+                  }
+                >
+                  ${graphData[0].toFixed(5)}
+                </Text>
                 <Text style={styles.returnTextN}>
                   {percentReturns}% (${returns})
                 </Text>
               </>
             ) : (
               <>
-                <Text style={styles.moneyText}>${graphData[0].toFixed(5)}</Text>
+                <Text
+                  style={
+                    this.state.darkMode
+                      ? darkStyles.moneyText
+                      : styles.moneyText
+                  }
+                >
+                  ${graphData[0].toFixed(5)}
+                </Text>
                 <Text style={styles.returnTextP}>
                   +{percentReturns}% (${returns})
                 </Text>
@@ -172,45 +205,69 @@ class LandingPage extends React.Component {
 
     return (
       <SafeAreaView style={GlobalStyles.adroidSafeArea}>
-        <OuterContainer>
-          <HeaderContainer>
-            <Entypo
-              onPress={() => navigation.goBack()}
-              name="chevron-thin-left"
-              size={24}
-              color="black"
-              style={styles.backIcon}
-            />
-            <TitleComponent>
-              <Icon source={{ uri: data.icon_address }} />
-              <HeaderText>{data.name}</HeaderText>
-            </TitleComponent>
-          </HeaderContainer>
+        <ScrollView style={{ backgroundColor: this.state.backgroundColor }}>
+          <OuterContainer>
+            <HeaderContainer>
+              <Entypo
+                onPress={() => navigation.goBack()}
+                name="chevron-thin-left"
+                size={24}
+                color={this.state.iconColor}
+                style={styles.backIcon}
+              />
+              <TitleComponent>
+                <Icon
+                  source={
+                    !this.state.darkMode
+                      ? { uri: data.icon_address }
+                      : { uri: data.icon_address_dark }
+                  }
+                />
+                <Text
+                  style={
+                    this.state.darkMode
+                      ? darkStyles.headerText
+                      : styles.headerText
+                  }
+                >
+                  {data.name}
+                </Text>
+              </TitleComponent>
+            </HeaderContainer>
 
-          <DateContainer>{dateJSX}</DateContainer>
-        </OuterContainer>
+            <DateContainer>{dateJSX}</DateContainer>
+          </OuterContainer>
 
-        <MainContainer>{code}</MainContainer>
+          <MainContainer>{code}</MainContainer>
 
-        <DescriptionContainer>
-          <Text style={styles.descriptionTitle}>Information</Text>
-        </DescriptionContainer>
-        <Description>
-          <DescriptionLeft>
-            <Text style={styles.description}>Symbol:</Text>
-            <Text style={styles.description}>Market Cap:</Text>
-            <Text style={styles.description}>24h Volume:</Text>
-          </DescriptionLeft>
-          <DescriptionRight>
-            <Text style={styles.description}>{data.symbol} </Text>
-            <Text style={styles.description}>
-              ${this.state.cap} {this.state.fiat}
+          <DescriptionContainer>
+            <Text
+              style={
+                this.state.darkMode
+                  ? darkStyles.descriptionTitle
+                  : styles.descriptionTitle
+              }
+            >
+              Information
             </Text>
-            <Text style={styles.description}>
-              ${this.state.volume} {this.state.fiat}
-            </Text>
-          </DescriptionRight>
-        </Description>
+          </DescriptionContainer>
+          <Description>
+            <DescriptionLeft>
+              <Text style={styles.description}>Symbol:</Text>
+              <Text style={styles.description}>Market Cap:</Text>
+              <Text style={styles.description}>24h Volume:</Text>
+            </DescriptionLeft>
+            <DescriptionRight>
+              <Text style={styles.description}>{data.symbol} </Text>
+              <Text style={styles.description}>
+                ${this.state.cap} {this.state.fiat}
+              </Text>
+              <Text style={styles.description}>
+                ${this.state.volume} {this.state.fiat}
+              </Text>
+            </DescriptionRight>
+          </Description>
+        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -269,5 +326,26 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginBottom: 12,
     marginLeft: 34,
+  },
+});
+
+const darkStyles = StyleSheet.create({
+  headerText: {
+    fontSize: 18,
+    color: "#F6F6F6",
+    lineHeight: 21.09,
+  },
+  descriptionTitle: {
+    color: "#F6F6F6",
+    lineHeight: 21,
+    marginBottom: 12,
+    fontSize: 15,
+  },
+  moneyText: {
+    fontSize: 15,
+    color: "#F6F6F6",
+    lineHeight: 17.58,
+    marginRight: 15,
+    marginTop: 10,
   },
 });

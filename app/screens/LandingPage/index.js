@@ -1,5 +1,12 @@
 import React from "react";
-import { StyleSheet, SafeAreaView, Text, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  ScrollView,
+  Switch,
+  StatusBar,
+} from "react-native";
 import GlobalStyles from "../../../GlobalStyles";
 import { Ionicons } from "@expo/vector-icons";
 import { LineChart } from "react-native-svg-charts";
@@ -9,7 +16,6 @@ import {
   OuterContainer,
   HeaderContainer,
   DateContainer,
-  HeaderText,
   CryptoComponent,
   MainContainer,
   DetailComponent,
@@ -23,6 +29,10 @@ class LandingPage extends React.Component {
     super(props);
     this.state = {
       data: [],
+      darkMode: false,
+      backgroundColor: "white",
+      iconColor: "black",
+      borderColor: "#f6f6f6",
       period: "month",
     };
   }
@@ -35,6 +45,15 @@ class LandingPage extends React.Component {
         this.getData();
       })
     );
+  }
+
+  toggleSwitch() {
+    this.setState({
+      darkMode: !this.state.darkMode,
+      backgroundColor: this.state.darkMode ? "white" : "black",
+      iconColor: this.state.darkMode ? "black" : "white",
+      borderColor: this.state.darkMode ? "#f6f6f6" : "#161616",
+    });
   }
 
   getData = () => {
@@ -102,18 +121,44 @@ class LandingPage extends React.Component {
                 period: this.state.period,
                 data: data,
                 graphData: graphData,
+                iconColor: this.state.iconColor,
+                backgroundColor: this.state.backgroundColor,
+                borderColor: this.state.borderColor,
+                darkMode: this.state.darkMode,
               })
             }
+            style={{
+              backgroundColor: this.state.backgroundColor,
+              borderColor: this.state.borderColor,
+            }}
           >
             <DetailComponent>
               <DetialLeft>
-                <Icon source={{ uri: data.icon_address }} />
-                <Text style={styles.iconText}>{name}</Text>
+                <Icon
+                  source={
+                    this.state.darkMode
+                      ? { uri: data.icon_address_dark }
+                      : { uri: data.icon_address }
+                  }
+                />
+                <Text
+                  style={
+                    !this.state.darkMode ? styles.iconText : darkStyles.iconText
+                  }
+                >
+                  {name}
+                </Text>
               </DetialLeft>
               <DetialRight>
                 {returns < 0 ? (
                   <>
-                    <Text style={styles.moneyText}>
+                    <Text
+                      style={
+                        !this.state.darkMode
+                          ? styles.moneyText
+                          : darkStyles.moneyText
+                      }
+                    >
                       ${graphData[0].toFixed(5)}
                     </Text>
                     <Text style={styles.returnTextN}>
@@ -122,7 +167,13 @@ class LandingPage extends React.Component {
                   </>
                 ) : (
                   <>
-                    <Text style={styles.moneyText}>
+                    <Text
+                      style={
+                        !this.state.darkMode
+                          ? styles.moneyText
+                          : darkStyles.moneyText
+                      }
+                    >
                       ${graphData[0].toFixed(5)}
                     </Text>
                     <Text style={styles.returnTextP}>
@@ -134,7 +185,10 @@ class LandingPage extends React.Component {
             </DetailComponent>
             <LineChart
               curve={shape.curveNatural}
-              style={{ height: 66 }}
+              style={{
+                height: 66,
+                backgroundColor: this.state.backgroundColor,
+              }}
               data={newArr}
               contentInset={{ top: 5, bottom: 5 }}
               svg={{ stroke: "#F15A29", strokeWidth: 3, strokeOpacity: 0.6 }}
@@ -189,13 +243,41 @@ class LandingPage extends React.Component {
 
     return (
       <SafeAreaView style={GlobalStyles.adroidSafeArea}>
-        <ScrollView style={styles.scrollView}>
-          <OuterContainer>
-            <HeaderContainer>
-              <HeaderText>Tracker</HeaderText>
+        <ScrollView style={{ backgroundColor: this.state.backgroundColor }}>
+          <StatusBar
+            barStyle={!this.state.darkMode ? "dark-content" : "light-content"}
+            backgroundColor={this.state.backgroundColor}
+          />
+          <OuterContainer
+            style={{ backgroundColor: this.state.backgroundColor }}
+          >
+            <HeaderContainer
+              style={{ backgroundColor: this.state.backgroundColor }}
+            >
+              <Switch
+                trackColor={{ false: "#767577", true: "#F15A29" }}
+                thumbColor={"#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={() => this.toggleSwitch()}
+                value={this.state.darkMode}
+                style={styles.toggle}
+              />
+              <Text
+                style={
+                  !this.state.darkMode
+                    ? styles.headerText
+                    : darkStyles.headerText
+                }
+              >
+                Tracker
+              </Text>
               <Ionicons
                 name="ios-search"
-                style={styles.searchIcon}
+                style={{
+                  position: "absolute",
+                  right: "5.26%",
+                  color: this.state.iconColor,
+                }}
                 size={25}
                 color="black"
               />
@@ -217,6 +299,15 @@ const styles = StyleSheet.create({
   searchIcon: {
     position: "absolute",
     right: "5.26%",
+  },
+  headerText: {
+    fontSize: 18,
+    color: "#495162",
+    lineHeight: 21.09,
+  },
+  toggle: {
+    position: "absolute",
+    left: "5.26%",
   },
   iconText: {
     fontSize: 15,
@@ -251,5 +342,25 @@ const styles = StyleSheet.create({
     color: "#F15A29",
     lineHeight: 21,
     fontSize: 15,
+  },
+});
+
+const darkStyles = StyleSheet.create({
+  headerText: {
+    fontSize: 18,
+    color: "#F6F6F6",
+    lineHeight: 21.09,
+  },
+  iconText: {
+    fontSize: 15,
+    color: "#F6F6F6",
+    lineHeight: 17.58,
+  },
+  moneyText: {
+    fontSize: 15,
+    color: "#F6F6F6",
+    lineHeight: 17.58,
+    marginRight: 15,
+    marginTop: 10,
   },
 });

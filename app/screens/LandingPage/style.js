@@ -2,6 +2,7 @@ import styled from "styled-components/native";
 
 export const OuterContainer = styled.View`
   flex-direction: column;
+  background-color: white;
 `;
 
 export const HeaderContainer = styled.View`
@@ -18,22 +19,13 @@ export const DateContainer = styled.View`
   flex-direction: row;
 `;
 
-export const HeaderText = styled.Text`
-  font-size: 18px;
-  line-height: 21.09px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  color: #495162;
-`;
-
 export const CryptoComponent = styled.TouchableOpacity`
-  background: #ffffff;
-  border: 2px solid #f6f6f6;
   border-radius: 15px;
   width: 343px;
   height: 140px;
   margin-bottom: 16px;
+  border-style: solid;
+  border-width: 2px;
 `;
 
 export const MainContainer = styled.View`
