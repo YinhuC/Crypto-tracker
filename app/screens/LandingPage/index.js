@@ -217,6 +217,8 @@ class LandingPage extends React.Component {
   handleModal() {
     this.setState({
       modal: !this.state.modal,
+      text: "",
+      searchJSX: [],
     });
   }
 
@@ -230,6 +232,14 @@ class LandingPage extends React.Component {
   }
 
   handleText(text) {
+    if (text === "") {
+      this.setState({
+        text: text,
+        searchJSX: [],
+      });
+      return;
+    }
+
     const { navigation } = this.props;
 
     var arr = this.state.names.filter(
